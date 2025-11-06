@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Primera API con JavaScript</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        .user-card {
+            background: rgba(255,255,255,0.2);
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border-left: 5px solid #00ff88;
+        }
+        button {
+            background: #00ff88;
+            color: #333;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 10px 5px;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background: #00cc6a;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,255,136,0.4);
+        }
+        #status {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .loading {
+            background: rgba(255,193,7,0.2);
+            border-left: 5px solid #ffc107;
+        }
+        .success {
+            background: rgba(40,167,69,0.2);
+            border-left: 5px solid #28a745;
+        }
+        .error {
+            background: rgba(220,53,69,0.2);
+            border-left: 5px solid #dc3545;
+        }
+        input {
+            padding: 12px 15px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 25px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 16px;
+            margin: 10px;
+        }
+        input::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌐 Mi Primera API con JavaScript ES6+</h1>
+        
+        <div id="status">Presiona un botón para comenzar</div>
+        
+        <div>
+            <button onclick="cargarUsuario(1)">👤 Cargar Usuario 1</button>
+            <button onclick="cargarUsuario(2)">👤 Cargar Usuario 2</button>
+            <button onclick="cargarUsuario(3)">👤 Cargar Usuario 3</button>
+            <button onclick="cargarTodos()">📋 Cargar Todos</button>
+            <button onclick="buscarUsuario()">🔍 Buscar Usuario</button>
+        </div>
+        
+        <input type="text" id="busqueda" placeholder="Buscar por nombre..." />
+        
+        <div id="resultados"></div>
+    </div>
+
+    <script>
+        // Base de datos simulada (esto será real con APIs en el futuro)
+        const baseDatosUsuarios = [
+            {
+                id: 1,
+                nombre: "Ana García",
+                email: "ana.garcia@email.com",
+                edad: 28,
+                ciudad: "Madrid",
+                profesion: "Desarrolladora Frontend",
+                salario: 45000,
+                tecnologias: ["JavaScript", "React", "Vue.js"],
+                activo: true
+            },
+            {
+                id: 2,
+                nombre: "Carlos Rodríguez",
+                email: "carlos.rodriguez@email.com",
+                edad: 32,
+                ciudad: "Barcelona",
+                profesion: "DevOps Engineer",
+                salario: 52000,
+                tecnologias: ["AWS", "Docker", "Kubernetes", "Python"],
+                activo: true
+            },
+            {
+                id: 3,
+                nombre: "María López",
+                email: "maria.lopez@email.com",
+                edad: 26,
+                ciudad: "Valencia",
+                profesion: "Full Stack Developer",
+                salario: 48000,
+                tecnologias: ["Node.js", "MongoDB", "React", "TypeScript"],
+                activo: false
+            },
+            {
+                id: 4,
+                nombre: "Pedro Martín",
+                email: "pedro.martin@email.com",
+                edad: 29,
+                ciudad: "Sevilla",
+                profesion: "Backend Developer",
+                salario: 43000,
+                tecnologias: ["Python", "Django", "PostgreSQL"],
+                activo: true
+            }
+        ];
+
+        // Función para mostrar status
+        function mostrarStatus(mensaje, tipo) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = mensaje;
+            statusDiv.className = tipo;
+        }
+
+        // Función para limpiar resultados
+        function limpiarResultados() {
+            document.getElementById('resultados').innerHTML = '';
+        }
+
+        // Función para renderizar usuario
+        function renderizarUsuario(usuario) {
+            return `
+                <div class="user-card">
+                    <h3>👤 ${usuario.nombre}</h3>
+                    <p><strong>📧 Email:</strong> ${usuario.email}</p>
+                    <p><strong>🎂 Edad:</strong> ${usuario.edad} años</p>
+                    <p><strong>📍 Ciudad:</strong> ${usuario.ciudad}</p>
+                    <p><strong>💼 Profesión:</strong> ${usuario.profesion}</p>
+                    <p><strong>💰 Salario:</strong> €${usuario.salario.toLocaleString()}</p>
+                    <p><strong>🛠️ Tecnologías:</strong> ${usuario.tecnologias.join(', ')}</p>
+                    <p><strong>✅ Estado:</strong> ${usuario.activo ? '🟢 Activo' : '🔴 Inactivo'}</p>
+                </div>
+            `;
+        }
+
+        // 🎯 PRÁCTICA 1: Buscar usuario por ID (find)
+        function cargarUsuario(id) {
+            mostrarStatus(`🔄 Buscando usuario ${id}...`, 'loading');
+            limpiarResultados();
+            
+            // Simular delay de red (como API real)
+            setTimeout(() => {
+                try {
+                    // Array method: find()
+                    const usuario = baseDatosUsuarios.find(user => user.id === id);
+                    
+                    if (usuario) {
+                        mostrarStatus(`✅ Usuario ${id} cargado exitosamente`, 'success');
+                        document.getElementById('resultados').innerHTML = 
+                            `<h2>Resultado para ID ${id}:</h2>${renderizarUsuario(usuario)}`;
+                    } else {
+                        mostrarStatus(`❌ Usuario ${id} no encontrado`, 'error');
+                        document.getElementById('resultados').innerHTML = 
+                            `<h2>Resultado:</h2><p>No se encontró ningún usuario con ID ${id}</p>`;
+                    }
+                    
+                } catch (error) {
+                    mostrarStatus(`❌ Error: ${error.message}`, 'error');
+                    console.error('Error:', error);
+                }
+            }, 1000); // Simular 1 segundo de delay
+        }
+
+        // 🎯 PRÁCTICA 2: Cargar todos (filter + map)
+        function cargarTodos() {
+            mostrarStatus('🔄 Cargando todos los usuarios...', 'loading');
+            limpiarResultados();
+            
+            setTimeout(() => {
+                try {
+                    // Array methods: filter() y map()
+                    const usuariosActivos = baseDatosUsuarios.filter(user => user.activo);
+                    const usuariosInactivos = baseDatosUsuarios.filter(user => !user.activo);
+                    
+                    mostrarStatus(`✅ ${usuariosActivos.length} usuarios activos cargados`, 'success');
+                    
+                    let html = `
+                        <h2>👥 Todos los Usuarios (${baseDatosUsuarios.length} total)</h2>
+                        <div style="background: rgba(40,167,69,0.2); padding: 15px; border-radius: 10px; margin: 10px 0;">
+                            <h3>🟢 Usuarios Activos (${usuariosActivos.length}):</h3>
+                            ${usuariosActivos.map(renderizarUsuario).join('')}
+                        </div>
+                        <div style="background: rgba(220,53,69,0.2); padding: 15px; border-radius: 10px; margin: 10px 0;">
+                            <h3>🔴 Usuarios Inactivos (${usuariosInactivos.length}):</h3>
+                            ${usuariosInactivos.map(renderizarUsuario).join('')}
+                        </div>
+                    `;
+                    
+                    document.getElementById('resultados').innerHTML = html;
+                    
+                } catch (error) {
+                    mostrarStatus(`❌ Error: ${error.message}`, 'error');
+                }
+            }, 1500);
+        }
+
+        // 🎯 PRÁCTICA 3: Buscar por nombre (filter + includes)
+        function buscarUsuario() {
+            const termino = document.getElementById('busqueda').value.toLowerCase().trim();
+            
+            if (!termino) {
+                mostrarStatus('⚠️ Escribe un nombre para buscar', 'error');
+                return;
+            }
+            
+            mostrarStatus(`🔍 Buscando "${termino}"...`, 'loading');
+            limpiarResultados();
+            
+            setTimeout(() => {
+                try {
+                    // Array method: filter() con includes()
+                    const resultados = baseDatosUsuarios.filter(usuario => 
+                        usuario.nombre.toLowerCase().includes(termino) ||
+                        usuario.profesion.toLowerCase().includes(termino) ||
+                        usuario.ciudad.toLowerCase().includes(termino)
+                    );
+                    
+                    if (resultados.length > 0) {
+                        mostrarStatus(`✅ ${resultados.length} resultado(s) encontrado(s)`, 'success');
+                        document.getElementById('resultados').innerHTML = 
+                            `<h2>🔍 Resultados para "${termino}":</h2>${resultados.map(renderizarUsuario).join('')}`;
+                    } else {
+                        mostrarStatus(`❌ No se encontraron resultados para "${termino}"`, 'error');
+                        document.getElementById('resultados').innerHTML = 
+                            `<h2>Resultados:</h2><p>No se encontraron usuarios que coincidan con "${termino}"</p>`;
+                    }
+                    
+                } catch (error) {
+                    mostrarStatus(`❌ Error: ${error.message}`, 'error');
+                }
+            }, 800);
+        }
+
+        // 🎯 PRÁCTICA 4: Async/Await con múltiples APIs
+        async function cargarDatosCompletos(usuarioId) {
+            mostrarStatus(`🔄 Cargando datos completos del usuario ${usuarioId}...`, 'loading');
+            
+            try {
+                // Simular múltiples API calls
+                const [usuario, estadisticas] = await Promise.all([
+                    simularAPICall('usuario', usuarioId, 1000),
+                    simularAPICall('estadisticas', usuarioId, 800)
+                ]);
+                
+                const datosCompletos = {
+                    ...usuario,
+                    estadisticas: estadisticas,
+                    fechaConsulta: new Date().toLocaleString()
+                };
+                
+                mostrarStatus(`✅ Datos completos cargados`, 'success');
+                
+                const html = `
+                    <h2>📊 Datos Completos - ${usuario.nombre}</h2>
+                    ${renderizarUsuario(usuario)}
+                    <div style="background: rgba(0,123,255,0.2); padding: 15px; border-radius: 10px; margin: 10px 0;">
+                        <h3>📈 Estadísticas:</h3>
+                        <p><strong>Proyectos completados:</strong> ${estadisticas.proyectos}</p>
+                        <p><strong>Años de experiencia:</strong> ${estadisticas.experiencia}</p>
+                        <p><strong>Rating promedio:</strong> ${estadisticas.rating}/5</p>
+                    </div>
+                    <p><strong>🕐 Consulta realizada:</strong> ${datosCompletos.fechaConsulta}</p>
+                `;
+                
+                document.getElementById('resultados').innerHTML = html;
+                
+            } catch (error) {
+                mostrarStatus(`❌ Error cargando datos: ${error.message}`, 'error');
+            }
+        }
+
+        // Función helper para simular API calls
+        function simularAPICall(tipo, id, delay) {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    if (tipo === 'usuario') {
+                        const usuario = baseDatosUsuarios.find(user => user.id === id);
+                        resolve(usuario);
+                    } else if (tipo === 'estadisticas') {
+                        // Simular estadísticas
+                        resolve({
+                            proyectos: Math.floor(Math.random() * 50) + 10,
+                            experiencia: Math.floor(Math.random() * 15) + 1,
+                            rating: (Math.random() * 2 + 3).toFixed(1)
+                        });
+                    } else {
+                        reject(new Error('Tipo de API no válido'));
+                    }
+                }, delay);
+            });
+        }
+
+        // Agregar eventos de teclado
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('busqueda').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    buscarUsuario();
+                }
+            });
+        });
+
+        // Demo automático al cargar
+        window.onload = function() {
+            console.log('🚀 Mi Primera API JavaScript cargada');
+            console.log('📚 Array methods usados: find(), filter(), map(), includes()');
+            console.log('⚡ Async/await implementado para llamadas múltiples');
+            console.log('🎯 Listo para conectar con APIs reales!');
+            
+            // Cargar usuario 1 automáticamente después de 2 segundos
+            setTimeout(() => {
+                cargarUsuario(1);
+            }, 2000);
+        };
+    </script>
+</body>
+</html>

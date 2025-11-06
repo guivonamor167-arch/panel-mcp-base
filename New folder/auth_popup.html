@@ -1,0 +1,123 @@
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" type="text/css" href="css/authPopup.css"/>
+    <script src="/js/_external/jquery-3.3.1.min.js"></script>
+    <script src="/js/MessageConstants.js"></script>
+    <script src="/js/setup.js" type="text/javascript"></script>
+    <script src="/js/core.js" type="text/javascript"></script>
+    <script src="/js/server.js" type="text/javascript"></script>
+    <script src="/js/content_scripts/Speaker.js"></script>
+    <script src="/js/Settings.js" type="text/javascript"></script>
+    <!--<script src="js/cookieManager.js" type="text/javascript"></script>-->
+    <script src="/js/localizer.js" type="text/javascript"></script>
+    <script src="/js/authPopup.js" type="text/javascript"></script>
+</head>
+<body>
+
+<div class="nca_auth nca_global nca_centered">
+    <div class="nca_auth_form_toggle">
+        <div class="nca_auth_form_toggle_text" data-id="login_form">Sign In</div>
+        <div class="nca_auth_form_toggle_text" data-id="reg_form">Create Account</div>
+        <div class="nca_auth_form_toggle_text" data-id="restore_form">Restore password</div>
+    </div>
+    <div class="nca_auth_wrapper nca_clearfix">
+
+        <!-- auth form -->
+        <div class="nca_auth_form nca_border_box">
+            <div class="nca_auth_logo"></div>
+            <div class="auth_message"></div>
+
+            <form method="" name="" action="" id="welcome_form">
+                <div class="nca_form_submit" style="margin-top: 100px">
+                    <button type="submit" name="" class="nca_button nca_noselect nca_border_box">Sign In</button>
+                </div>
+            </form>
+
+            <form method="" name="" action="" id="login_form">
+                <div class="nca_form_fields">
+                    <div class="nca_form_field">
+                        <div class="nca_form_field_info"></div>
+                        <div class="nca_form_field_block">
+                            <input class="nca_form_input_text nca_border_box" type="text" name="email" value="" placeholder="Placeholder">
+                        </div>
+                    </div>
+                    <div class="nca_form_field">
+                        <div class="nca_form_field_info"></div>
+                        <div class="nca_form_field_block">
+                            <input class="nca_form_input_text nca_border_box" type="password" name="password" value="" placeholder="Placeholder">
+                        </div>
+                    </div>
+                </div>
+                <div class="nca_form_submit">
+                    <button type="submit" name="" class="nca_button nca_noselect nca_border_box" id="login_button">Sign In</button>
+                </div>
+            </form>
+
+            <form method="" name="" action="" id="captcha_form">
+                <input type="hidden" name="captcha_state" value="">
+                <div class="nca_form_field" style="margin: 20px 0">
+                    <div class="nca_form_field_block">
+                        <input autocomplete="off" class="nca_form_input_text nca_border_box form_captcha_input" type="text" name="captcha_code" placeholder="Text from the image">
+                    </div>
+                </div>
+                <div class="nca_form_fields">
+                    <div class="nca_form_field form_captcha_image_container">
+                        <img id="captcha_image" class="form_captcha_image" src="" style="display: none">
+                    </div>
+                </div>
+                <div class="nca_form_submit">
+                    <button type="submit" name="" class="nca_button nca_noselect nca_border_box" id="captcha_button">Continue</button>
+                </div>
+            </form>
+
+            <form method="" name="" action="" id="otp_form">
+                <input type="hidden" name="otp_state" value="">
+                <div class="nca_form_field" style="margin: 20px 0">
+                    <div class="nca_form_field_block">
+                        <input autocomplete="off" class="nca_form_input_text nca_border_box form_captcha_input" type="text" name="otp_code" placeholder="Please enter the temporary code">
+                    </div>
+                </div>
+                <div class="nca_form_submit">
+                    <button type="submit" name="" class="nca_button nca_noselect nca_border_box" id="captcha_button">Continue</button>
+                </div>
+            </form>
+                
+            <form method="" name="" action="" id="reg_form">
+                <div class="nca_form_fields">
+                    <div class="nca_form_field">
+                        <div class="nca_form_field_info"></div>
+                        <div class="nca_form_field_block">
+                            <input class="nca_form_input_text nca_border_box" type="text" name="email" value="" placeholder="Placeholder">
+                        </div>
+                    </div>
+                    <div class="nca_form_field">
+                        <div class="nca_form_field_info"></div>
+                        <div class="nca_form_field_block">
+                            <input class="nca_form_input_text nca_border_box" type="password" name="password" value="" placeholder="Placeholder">
+                        </div>
+                    </div>
+                    <div class="nca_form_field">
+                        <div class="nca_form_field_info"></div>
+                        <div class="nca_form_field_block">
+                            <input class="nca_form_input_text nca_border_box" type="password" name="password2" value="" placeholder="Placeholder">
+                        </div>
+                    </div>
+                </div>
+                <div class="nca_form_info_text" id="clicking_sign_up_agree">
+                    By clicking Sign up, you agree<br>to our <a rel="#" title="#">Terms and Conditions</a>
+                </div>
+                <div class="nca_form_submit">
+                    <button type="submit" name="" class="nca_button nca_noselect nca_border_box" id="reg_button">Create Account</button>
+                </div>
+            </form>
+
+        </div>
+        <!-- /auth form -->
+
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,43 @@
+        // 🎯 PRÁCTICA 5: Array Methods
+        function demoArrayMethods() {
+            const productos = [
+                { nombre: "Laptop", precio: 800, categoria: "tech" },
+                { nombre: "Mouse", precio: 25, categoria: "tech" },
+                { nombre: "Café", precio: 5, categoria: "food" },
+                { nombre: "Libro", precio: 20, categoria: "education" },
+                { nombre: "Teclado", precio: 120, categoria: "tech" }
+            ];
+
+            // Map - Transformar datos
+            const nombresProductos = productos.map(p => p.nombre);
+            
+            // Filter - Filtrar por criterio
+            const productosTech = productos.filter(p => p.categoria === 'tech');
+            
+            // Find - Encontrar el primero que cumpla condición
+            const laptop = productos.find(p => p.nombre === 'Laptop');
+            
+            // Reduce - Acumular valores
+            const totalPrecio = productos.reduce((acc, p) => acc + p.precio, 0);
+            
+            // Sort - Ordenar
+            const productosOrdenados = [...productos].sort((a, b) => a.precio - b.precio);
+            
+            // Some/Every - Verificar condiciones
+            const hayTech = productos.some(p => p.categoria === 'tech');
+            const todosTech = productos.every(p => p.categoria === 'tech');
+
+            let output = `
+            <h3>✅ Array Methods:</h3>
+            <p><strong>Map (transformar):</strong> ${nombresProductos.join(', ')}</p>
+            <p><strong>Filter (filtrar tech):</strong> ${productosTech.map(p => p.nombre).join(', ')}</p>
+            <p><strong>Find (buscar Laptop):</strong> ${laptop ? laptop.nombre + ' - €' + laptop.precio : 'No encontrado'}</p>
+            <p><strong>Reduce (total):</strong> €${totalPrecio}</p>
+            <p><strong>Sort (por precio):</strong> ${productosOrdenados.map(p => p.nombre).join(', ')}</p>
+            <p><strong>Some (hay tech?):</strong> ${hayTech ? 'Sí' : 'No'}</p>
+            <p><strong>Every (todos tech?):</strong> ${todosTech ? 'Sí' : 'No'}</p>
+            <p><strong>Uso diario:</strong> Conectar APIs, procesar datos, filtrar usuarios</p>
+            `;
+            
+            document.getElementById('output-async').innerHTML = output;
+        }
