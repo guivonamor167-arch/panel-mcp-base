@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clima Interactivo - API Real | Guillermo Amor</title>
+    <meta name="description" content="Aplicación web de clima con API real. Geolocalización, pronóstico de 5 días y ciudades favoritas. JavaScript avanzado implementado.">
+    <style>
+        /* ===== RESET Y BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 50%, #6c5ce7 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* ===== SECCIÓN DE BÚSQUEDA ===== */
+        .search-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .search-form {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 300px;
+            padding: 15px 20px;
+            border: 2px solid #ddd;
+            border-radius: 50px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: #74b9ff;
+        }
+
+        .btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #74b9ff, #0984e3);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #a29bfe, #6c5ce7);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ===== SECCIÓN DEL CLIMA ===== */
+        .weather-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .weather-current {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .weather-location {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .weather-temp {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #74b9ff;
+            margin: 20px 0;
+        }
+
+        .weather-description {
+            font-size: 1.5rem;
+            color: #666;
+            text-transform: capitalize;
+        }
+
+        .weather-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .weather-detail {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .weather-detail-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .weather-detail-label {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* ===== PRONÓSTICO ===== */
+        .forecast-section {
+            margin-bottom: 30px;
+        }
+
+        .forecast-title {
+            color: white;
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .forecast-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .forecast-day {
+            background: rgba(255,255,255,0.9);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .forecast-day:hover {
+            transform: translateY(-5px);
+        }
+
+        .forecast-date {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .forecast-temp {
+            font-size: 1.5rem;
+            color: #74b9ff;
+            margin: 10px 0;
+        }
+
+        .forecast-desc {
+            color: #666;
+            text-transform: capitalize;
+        }
+
+        /* ===== CIUDADES FAVORITAS ===== */
+        .favorites-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .favorites-title {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .favorites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .favorite-city {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .favorite-city:hover {
+            background: #e9ecef;
+            transform: scale(1.02);
+        }
+
+        .city-name {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .remove-favorite {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        /* ===== ESTADOS DE CARGA ===== */
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .error {
+            background: #ff6b6b;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .search-form {
+                flex-direction: column;
+            }
+            
+            .search-input {
+                min-width: 100%;
+            }
+            
+            .weather-temp {
+                font-size: 3rem;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- ===== HEADER ===== -->
+        <header class="header">
+            <h1>🌤️ Clima Interactivo</h1>
+            <p>API del clima en tiempo real con JavaScript avanzado</p>
+        </header>
+
+        <!-- ===== SECCIÓN DE BÚSQUEDA ===== -->
+        <section class="search-section">
+            <form class="search-form" id="searchForm">
+                <input 
+                    type="text" 
+                    id="cityInput" 
+                    class="search-input" 
+                    placeholder="Buscar ciudad (ej: Madrid, Barcelona, París...)"
+                    required
+                >
+                <button type="submit" class="btn btn-primary" id="searchBtn">
+                    🔍 Buscar Clima
+                </button>
+                <button type="button" class="btn btn-secondary" id="locationBtn">
+                    📍 Mi Ubicación
+                </button>
+            </form>
+        </section>
+
+        <!-- ===== SECCIÓN DEL CLIMA ===== -->
+        <section class="weather-section" id="weatherSection">
+            <div class="weather-current" id="weatherCurrent">
+                <!-- Clima actual se cargará aquí -->
+            </div>
+            <div class="weather-details" id="weatherDetails">
+                <!-- Detalles adicionales se cargarán aquí -->
+            </div>
+        </section>
+
+        <!-- ===== PRONÓSTICO ===== -->
+        <section class="forecast-section" id="forecastSection" style="display: none;">
+            <h2 class="forecast-title">🔮 Pronóstico de 5 Días</h2>
+            <div class="forecast-grid" id="forecastGrid">
+                <!-- Pronóstico se cargará aquí -->
+            </div>
+        </section>
+
+        <!-- ===== CIUDADES FAVORITAS ===== -->
+        <section class="favorites-section">
+            <h3 class="favorites-title">⭐ Ciudades Favoritas</h3>
+            <div class="favorites-grid" id="favoritesGrid">
+                <div style="text-align: center; color: #666; padding: 20px;">
+                    Aún no tienes ciudades favoritas. ¡Busca una ciudad para empezar!
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // ===== CONFIGURACIÓN ===== 
+        // NOTA: Para usar esta aplicación necesitas una API key de OpenWeatherMap
+        // Regístrate gratis en: https://openweathermap.org/api
+        const API_KEY = '9c08d8d91ec2c9c18c816c7fc9c436b7
+'; // ← CAMBIAR POR TU API KEY
+        const BASE_URL = 'https://api.openweathermap.org/data/2.5';
+
+        // ===== CLASE PRINCIPAL ===== 
+        class WeatherApp {
+            constructor() {
+                this.favorites = this.loadFavorites();
+                this.initEventListeners();
+                this.loadFavoritesDisplay();
+            }
+
+            // ===== INICIALIZACIÓN ===== 
+            initEventListeners() {
+                const form = document.getElementById('searchForm');
+                const locationBtn = document.getElementById('locationBtn');
+                const favoritesGrid = document.getElementById('favoritesGrid');
+
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleSearch();
+                });
+
+                locationBtn.addEventListener('click', () => {
+                    this.handleGeolocation();
+                });
+
+                favoritesGrid.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('remove-favorite')) {
+                        this.removeFavorite(e.target.dataset.city);
+                    } else if (e.target.classList.contains('favorite-city') || e.target.closest('.favorite-city')) {
+                        const cityElement = e.target.classList.contains('favorite-city') ? e.target : e.target.closest('.favorite-city');
+                        this.loadWeatherByCity(cityElement.dataset.city);
+                    }
+                });
+            }
+
+            // ===== MANEJO DE BÚSQUEDAS ===== 
+            async handleSearch() {
+                const cityInput = document.getElementById('cityInput');
+                const city = cityInput.value.trim();
+                
+                if (!city) return;
+
+                this.setLoading(true);
+                try {
+                    await this.loadWeatherByCity(city);
+                    cityInput.value = '';
+                } catch (error) {
+                    this.showError('No se pudo encontrar la ciudad. Verifica el nombre e intenta de nuevo.');
+                } finally {
+                    this.setLoading(false);
+                }
+            }
+
+            // ===== GEOLOCALIZACIÓN ===== 
+            async handleGeolocation() {
+                if (!navigator.geolocation) {
+                    this.showError('Tu navegador no soporta geolocalización.');
+                    return;
+                }
+
+                this.setLoading(true);
+                try {
+                    const position = await this.getCurrentPosition();
+                    await this.loadWeatherByCoords(position.coords.latitude, position.coords.longitude);
+                } catch (error) {
+                    this.showError('No se pudo obtener tu ubicación.');
+                } finally {
+                    this.setLoading(false);
+                }
+            }
+
+            getCurrentPosition() {
+                return new Promise((resolve, reject) => {
+                    navigator.geolocation.getCurrentPosition(resolve, reject);
+                });
+            }
+
+            // ===== CARGAR CLIMA POR CIUDAD ===== 
+            async loadWeatherByCity(city) {
+                try {
+                    this.setLoading(true);
+                    
+                    // API call principal
+                    const currentResponse = await fetch(
+                        `${BASE_URL}/weather?q=${encodeURIComponent(city)}&appid=${API_KEY}&units=metric&lang=es`
+                    );
+                    
+                    if (!currentResponse.ok) {
+                        throw new Error('Ciudad no encontrada');
+                    }
+
+                    const currentData = await currentResponse.json();
+                    
+                    // API call para pronóstico
+                    const forecastResponse = await fetch(
+                        `${BASE_URL}/forecast?q=${encodeURIComponent(city)}&appid=${API_KEY}&units=metric&lang=es`
+                    );
+                    
+                    if (!forecastResponse.ok) {
+                        throw new Error('No se pudo obtener el pronóstico');
+                    }
+
+                    const forecastData = await forecastResponse.json();
+                    
+                    this.displayCurrentWeather(currentData);
+                    this.displayForecast(forecastData);
+                    this.addToFavorites(city);
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+                    this.showError('Error al cargar el clima. Verifica tu conexión a internet.');
+                } finally {
+                    this.setLoading(false);
+                }
+            }
+
+            // ===== CARGAR CLIMA POR COORDENADAS ===== 
+            async loadWeatherByCoords(lat, lon) {
+                try {
+                    this.setLoading(true);
+                    
+                    // API call principal
+                    const currentResponse = await fetch(
+                        `${BASE_URL}/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=es`
+                    );
+                    
+                    if (!currentResponse.ok) {
+                        throw new Error('No se pudo obtener el clima');
+                    }
+
+                    const currentData = await currentResponse.json();
+                    
+                    // API call para pronóstico
+                    const forecastResponse = await fetch(
+                        `${BASE_URL}/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=es`
+                    );
+                    
+                    if (!forecastResponse.ok) {
+                        throw new Error('No se pudo obtener el pronóstico');
+                    }
+
+                    const forecastData = await forecastResponse.json();
+                    
+                    this.displayCurrentWeather(currentData);
+                    this.displayForecast(forecastData);
+                    this.addToFavorites(currentData.name);
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+                    this.showError('Error al cargar el clima. Verifica tu conexión a internet.');
+                } finally {
+                    this.setLoading(false);
+                }
+            }
+
+            // ===== MOSTRAR CLIMA ACTUAL ===== 
+            displayCurrentWeather(data) {
+                const weatherSection = document.getElementById('weatherSection');
+                const weatherCurrent = document.getElementById('weatherCurrent');
+                const weatherDetails = document.getElementById('weatherDetails');
+
+                weatherSection.style.display = 'block';
+                
+                // Usar iconos de la API o emojis como fallback
+                const icon = data.weather[0].icon;
+                const iconUrl = `https://openweathermap.org/img/wn/${icon}@2x.png`;
+                const emoji = this.getWeatherEmoji(data.weather[0].main);
+
+                weatherCurrent.innerHTML = `
+                    <div class="weather-location">${data.name}, ${data.sys.country}</div>
+                    <div class="weather-temp">${Math.round(data.main.temp)}°C</div>
+                    <div class="weather-description">
+                        ${emoji} ${data.weather[0].description}
+                    </div>
+                `;
+
+                weatherDetails.innerHTML = `
+                    <div class="weather-detail">
+                        <div class="weather-detail-value">${Math.round(data.main.feels_like)}°C</div>
+                        <div class="weather-detail-label">Sensación térmica</div>
+                    </div>
+                    <div class="weather-detail">
+                        <div class="weather-detail-value">${data.main.humidity}%</div>
+                        <div class="weather-detail-label">Humedad</div>
+                    </div>
+                    <div class="weather-detail">
+                        <div class="weather-detail-value">${Math.round(data.main.pressure)} hPa</div>
+                        <div class="weather-detail-label">Presión</div>
+                    </div>
+                    <div class="weather-detail">
+                        <div class="weather-detail-value">${Math.round(data.wind.speed * 3.6)} km/h</div>
+                        <div class="weather-detail-label">Viento</div>
+                    </div>
+                `;
+            }
+
+            // ===== MOSTRAR PRONÓSTICO ===== 
+            displayForecast(data) {
+                const forecastSection = document.getElementById('forecastSection');
+                const forecastGrid = document.getElementById('forecastGrid');
+
+                forecastSection.style.display = 'block';
+                
+                // Tomar solo el primer pronóstico de cada día
+                const dailyForecasts = [];
+                const dates = new Set();
+                
+                data.list.forEach(item => {
+                    const date = new Date(item.dt * 1000).toDateString();
+                    if (!dates.has(date) && dailyForecasts.length < 5) {
+                        dates.add(date);
+                        dailyForecasts.push(item);
+                    }
+                });
+
+                forecastGrid.innerHTML = dailyForecasts.map(forecast => {
+                    const date = new Date(forecast.dt * 1000);
+                    const emoji = this.getWeatherEmoji(forecast.weather[0].main);
+                    
+                    return `
+                        <div class="forecast-day">
+                            <div class="forecast-date">${this.formatDate(date)}</div>
+                            <div class="forecast-temp">${Math.round(forecast.main.temp)}°C</div>
+                            <div class="forecast-desc">
+                                ${emoji} ${forecast.weather[0].description}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // ===== GESTIÓN DE FAVORITOS ===== 
+            addToFavorites(city) {
+                if (!this.favorites.includes(city)) {
+                    this.favorites.push(city);
+                    this.saveFavorites();
+                    this.loadFavoritesDisplay();
+                }
+            }
+
+            removeFavorite(city) {
+                this.favorites = this.favorites.filter(fav => fav !== city);
+                this.saveFavorites();
+                this.loadFavoritesDisplay();
+            }
+
+            loadFavoritesDisplay() {
+                const favoritesGrid = document.getElementById('favoritesGrid');
+                
+                if (this.favorites.length === 0) {
+                    favoritesGrid.innerHTML = `
+                        <div style="text-align: center; color: #666; padding: 20px;">
+                            Aún no tienes ciudades favoritas. ¡Busca una ciudad para empezar!
+                        </div>
+                    `;
+                    return;
+                }
+
+                favoritesGrid.innerHTML = this.favorites.map(city => `
+                    <div class="favorite-city" data-city="${city}">
+                        <span class="city-name">${city}</span>
+                        <button class="remove-favorite" data-city="${city}">✕</button>
+                    </div>
+                `).join('');
+            }
+
+            saveFavorites() {
+                localStorage.setItem('weather-favorites', JSON.stringify(this.favorites));
+            }
+
+            loadFavorites() {
+                const stored = localStorage.getItem('weather-favorites');
+                return stored ? JSON.parse(stored) : [];
+            }
+
+            // ===== UTILIDADES ===== 
+            getWeatherEmoji(weatherMain) {
+                const emojis = {
+                    'Clear': '☀️',
+                    'Clouds': '☁️',
+                    'Rain': '🌧️',
+                    'Drizzle': '🌦️',
+                    'Thunderstorm': '⛈️',
+                    'Snow': '❄️',
+                    'Mist': '🌫️',
+                    'Fog': '🌫️',
+                    'Haze': '🌫️'
+                };
+                return emojis[weatherMain] || '🌤️';
+            }
+
+            formatDate(date) {
+                const days = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+                const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 
+                               'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+                return `${days[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]}`;
+            }
+
+            setLoading(isLoading) {
+                const searchBtn = document.getElementById('searchBtn');
+                const locationBtn = document.getElementById('locationBtn');
+                
+                searchBtn.disabled = isLoading;
+                locationBtn.disabled = isLoading;
+                
+                if (isLoading) {
+                    searchBtn.innerHTML = '⏳ Cargando...';
+                    locationBtn.innerHTML = '⏳ Obteniendo ubicación...';
+                } else {
+                    searchBtn.innerHTML = '🔍 Buscar Clima';
+                    locationBtn.innerHTML = '📍 Mi Ubicación';
+                }
+            }
+
+            showError(message) {
+                // Remover error previo si existe
+                const existingError = document.querySelector('.error');
+                if (existingError) {
+                    existingError.remove();
+                }
+
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error';
+                errorDiv.textContent = message;
+                
+                const searchSection = document.querySelector('.search-section');
+                searchSection.parentNode.insertBefore(errorDiv, searchSection.nextSibling);
+                
+                setTimeout(() => {
+                    errorDiv.remove();
+                }, 5000);
+            }
+        }
+
+        // ===== INICIALIZACIÓN ===== 
+        document.addEventListener('DOMContentLoaded', () => {
+            new WeatherApp();
+        });
+    </script>
+</body>
+</html>
