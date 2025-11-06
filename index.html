@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guillermo Amor - Desarrollador Web Autodidacta</title>
+    <meta name="description" content="Portfolio web profesional de Guillermo Amor. Desarrollador autodidacta especializado en HTML, CSS, JavaScript. Metodología A³ aplicada.">
+    <style>
+        /* ===== RESET Y BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            text-align: center;
+            padding: 100px 20px;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.9;
+        }
+
+        .hero .tagline {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
+        /* ===== CONTENEDOR PRINCIPAL ===== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.1);
+            margin-top: 50px;
+        }
+
+        /* ===== SECCIÓN SOBRE MÍ ===== */
+        .about {
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        .about h2 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+        }
+
+        .about p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            color: #666;
+            line-height: 1.8;
+        }
+
+        .skills {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .skill-tag {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* ===== SECCIÓN PROYECTOS ===== */
+        .projects {
+            padding: 60px 40px;
+            background: #f8f9fa;
+        }
+
+        .projects h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 50px;
+            font-size: 2.5rem;
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .project-card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .project-card p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .project-link {
+            display: inline-block;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .project-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .footer h3 {
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .contact-item a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .contact-item a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .project-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .about, .projects {
+                padding: 40px 20px;
+            }
+            
+            .contact-info {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero .subtitle {
+                font-size: 1rem;
+            }
+            
+            .project-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ===== HERO SECTION ===== -->
+    <section class="hero">
+        <h1>Guillermo Amor</h1>
+        <div class="subtitle">Desarrollador Web Autodidacta</div>
+        <div class="tagline">Metodología A³ aplicada | HTML • CSS • JavaScript</div>
+    </section>
+
+    <!-- ===== CONTENEDOR PRINCIPAL ===== -->
+    <div class="container">
+        <!-- ===== SOBRE MÍ ===== -->
+        <section class="about">
+            <h2>👨‍💻 Sobre Mí</h2>
+            <p>
+                Soy un desarrollador web autodidacta en crecimiento constante. 
+                Me especializo en crear experiencias web modernas y funcionales 
+                usando HTML, CSS y JavaScript. Mi enfoque se basa en la 
+                <strong>Metodología A³</strong>: Análisis, Arquitectura y 
+                Acción Automatizada para garantizar resultados profesionales.
+            </p>
+            <p>
+                Mi pasión por la programación me impulsa a crear soluciones 
+                innovadoras que combinen diseño atractivo con funcionalidad robusta. 
+                Cada proyecto es una oportunidad de aprender y crecer.
+            </p>
+            
+            <div class="skills">
+                <span class="skill-tag">HTML5</span>
+                <span class="skill-tag">CSS3</span>
+                <span class="skill-tag">JavaScript</span>
+                <span class="skill-tag">Git</span>
+                <span class="skill-tag">GitHub</span>
+                <span class="skill-tag">Responsive Design</span>
+                <span class="skill-tag">Metodología A³</span>
+            </div>
+        </section>
+
+        <!-- ===== MIS PROYECTOS ===== -->
+        <section class="projects">
+            <h2>🚀 Mis Proyectos Web</h2>
+            
+            <div class="project-grid">
+                <div class="project-card">
+                    <h3>🎨 Fundamentos JavaScript</h3>
+                    <p>Demostración interactiva de conceptos fundamentales de JavaScript, incluyendo manipulación del DOM, eventos y lógica básica.</p>
+                    <a href="fundamentos-js.html" class="project-link" target="_blank">Ver Proyecto →</a>
+                </div>
+
+                <div class="project-card">
+                    <h3>🌐 Mi Primera API</h3>
+                    <p>Implementación práctica de consumo de APIs externas, manejo de datos JSON y integración con servicios web.</p>
+                    <a href="mi-primera-api.html" class="project-link" target="_blank">Ver Proyecto →</a>
+                </div>
+
+                <div class="project-card">
+                    <h3>💼 Mi Portfolio Personal</h3>
+                    <p>Sitio web profesional completamente responsive con diseño moderno y estructura optimizada para diferentes dispositivos.</p>
+                    <a href="mi-portfolio.html" class="project-link" target="_blank">Ver Proyecto →</a>
+                </div>
+
+                <div class="project-card">
+                    <h3>📐 CSS Grid Demo</h3>
+                    <p>Demostración avanzada de CSS Grid Layout, mostrando layouts complejos y técnicas modernas de posicionamiento.</p>
+                    <a href="css-grid-demo.html" class="project-link" target="_blank">Ver Proyecto →</a>
+                </div>
+
+                <div class="project-card">
+                    <h3>✨ CSS Modern Demo</h3>
+                    <p>Exploración de las últimas características de CSS moderno, incluyendo variables, gradientes y animaciones.</p>
+                    <a href="css-modern-demo.html" class="project-link" target="_blank">Ver Proyecto →</a>
+                </div>
+
+                <div class="project-card">
+                    <h3>📱 Sitio Responsive</h3>
+                    <p>Implementación de diseño mobile-first con técnicas avanzadas de responsive design y optimización para móviles.</p>
+                    <a href="mi-sitio-responsive.html" class="project-link" target="_blank">Ver Proyecto →</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== FOOTER / CONTACTO ===== -->
+        <footer class="footer">
+            <h3>📞 Conectemos</h3>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <span>💻</span>
+                    <a href="https://github.com/guivonamor167-arch" target="_blank">@guivonamor167-arch</a>
+                </div>
+                <div class="contact-item">
+                    <span>🌐</span>
+                    <a href="https://guivonamor167-arch.github.io/panel-mcp-base/" target="_blank">Portfolio Web</a>
+                </div>
+                <div class="contact-item">
+                    <span>📧</span>
+                    <span>Desarrollador en crecimiento continuo</span>
+                </div>
+            </div>
+            <p style="opacity: 0.7; margin-top: 20px;">
+                © 2024 Guillermo Amor | Desarrollando con metodología A³
+            </p>
+        </footer>
+    </div>
+
+    <!-- ===== SCRIPT PARA MEJORAR LA EXPERIENCIA ===== -->
+    <script>
+        // Animación suave al hacer scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            // Efecto parallax simple en el hero
+            const hero = document.querySelector('.hero');
+            
+            window.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset;
+                const rate = scrolled * -0.5;
+                hero.style.transform = `translateY(${rate}px)`;
+            });
+
+            // Animación de las tarjetas al entrar en viewport
+            const cards = document.querySelectorAll('.project-card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>
